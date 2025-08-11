@@ -1,1 +1,2 @@
-This is the initial file for the capstone project of the Meta React Native Coursera course
+This is the initial file for the capstone project of the Meta React Native Coursera course.
+Now, it has been updated in github.
