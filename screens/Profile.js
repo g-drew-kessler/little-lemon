@@ -20,7 +20,7 @@ import {
   getProfileRecord
 } from '../profileRecord';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({navigation, updateAvatarImage}) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -39,18 +39,6 @@ export default function ProfileScreen() {
 
     const userInitials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
-    const updateBoolState = (key) => () =>
-      setProfile((prevState) => ({
-        ...prevState,
-        [key]: !prevState[key],
-      }));
-  
-    const updateState = (key) => (value) =>
-      setProfile((prevState) => ({
-        ...prevState,
-        [key]: value,
-      }));
-  
     useEffect(() => {
       (async() => {
         try {
@@ -98,9 +86,12 @@ export default function ProfileScreen() {
     if (!result.canceled) {
         setAvatarImage(result.assets[0].uri);
         setChangeMade(true);
+        console.log('Setting avatarImage to ' + result.assets[0].uri);
+        console.log('updateAvatarImage=' + String(updateAvatarImage));
+        updateAvatarImage(result.assets[0].uri);
     }
   }
-  
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.entryContainer}>
@@ -126,6 +117,7 @@ export default function ProfileScreen() {
                     onPress={() => {
                         setAvatarImage('');
                         setChangeMade(true);
+                        updateAvatarImage('');
                     }}
                     disabled={avatarImage === ''}
                     style={(avatarImage === '')
@@ -254,6 +246,7 @@ export default function ProfileScreen() {
                     setNotifySpecialOffers(profile.notifySpecialOffers);
                     setNotifyNewsletter(profile.notifyNewsletter);
                     setChangeMade(false);
+                    navigation.navigate('Home');
                 }}
                 disabled={!changeMade}
                 style={!changeMade
@@ -276,6 +269,7 @@ export default function ProfileScreen() {
                         notifyNewsletter: notifyNewsletter
                     });
                     setChangeMade(false);
+                    navigation.navigate('Home');
                 }}
                 disabled={!changeMade}
                 style={!changeMade

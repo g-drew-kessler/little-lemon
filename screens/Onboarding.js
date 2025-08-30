@@ -17,7 +17,7 @@ import {
   getProfileRecord
 } from '../profileRecord';
 
-export default function Onboarding({navigation}) {
+export default function Onboarding({navigation, updateProfile}) {
   const [emailValid, setEmailValid] = useState(false);
   const [profile, setProfile] = useState(getInitProfileRecord());
 
@@ -105,7 +105,8 @@ export default function Onboarding({navigation}) {
         <Pressable
             onPress={() => {
               updateState('isOnboardingCompleted')(true);
-              navigation.navigate('Profile');
+              updateProfile(profile);
+              navigation.navigate('Home');
             }}
             disabled={(profile.firstName === '' || !emailValid)}
             style={(profile.firstName === '' || !emailValid)
