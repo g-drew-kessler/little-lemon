@@ -42,15 +42,13 @@ export default function Onboarding({navigation, updateProfile}) {
   // Update the profile in our AsyncStorage whenever it changes, except on
   // the first rendering, where the profile should be set from the current
   // value in the AsyncStorage
-  
+
   useEffect(() => {
     (async() => {
       try {
-        console.log('initial mount check onboarding');
         if (isInitialMount.current) {
           isInitialMount.current = false;
         } else {
-          console.log('Setting values onboarding');
           await setProfileRecord(profile);
         }
       } catch(error) {
@@ -62,7 +60,6 @@ export default function Onboarding({navigation, updateProfile}) {
   useEffect(() => {
     (async () => {
       try {
-        console.log('Getting Values onboarding');
         const initialProfile = await getProfileRecord();
         setProfile(initialProfile);
         setEmailValid(validateEmail(initialProfile.email) !== null);

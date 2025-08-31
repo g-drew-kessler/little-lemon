@@ -74,7 +74,6 @@ export async function filterByQueryAndCategories(query, activeCategories) {
       queryStr += ' )';
     }
   }
-  console.log('Filtering using query: ', query, ' queryStr: ', queryStr);
   return await db.getAllAsync(queryStr);
 }
 

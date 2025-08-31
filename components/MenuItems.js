@@ -67,7 +67,6 @@ export default function MenuItems() {
                             category: item.category,
                 })
             );
-            console.log('Fetched menu items:', menuItems);
         } catch (error) {
             Alert.alert('Failed to retrieve menu items from '
                         + menuItemsUrl + ': ' + error.message);
@@ -80,17 +79,14 @@ export default function MenuItems() {
             try {
                 await createTable();
                 let menuItems = await getMenuItems();
-                console.log('Got menu items from SQL query: ', menuItems);
 
                 if (!menuItems.length) {
                     menuItems = await fetchMenuItems();
-                    console.log('Fetched menu items:', menuItems);
                     await saveMenuItems(menuItems);
                 }
 
                 const categories = menuItems.map(item => item.category);
                 const uniqueCategories = [... new Set(categories)].sort();
-                console.log('Fetched categories:', uniqueCategories);
 
                 setData(menuItems);
                 setCategories(uniqueCategories);

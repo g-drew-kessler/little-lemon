@@ -88,8 +88,6 @@ export default function ProfileScreen({navigation, updateAvatarImage}) {
     if (!result.canceled) {
         setAvatarImage(result.assets[0].uri);
         setChangeMade(true);
-        console.log('Setting avatarImage to ' + result.assets[0].uri);
-        console.log('updateAvatarImage=' + String(updateAvatarImage));
         updateAvatarImage(result.assets[0].uri);
     }
   }

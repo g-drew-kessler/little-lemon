@@ -41,9 +41,6 @@ function HomeScreen() {
 
 // The navigation title for the home screen
 function HomeScreenTitle({profile}) {
-  console.log('HomeScreenTitle render, avatar:' + profile.avatarImage);
-  console.log('firstName=' + profile.firstName);
-  console.log('lastName=' + profile.lastName);
   return (
     <Image
           style={styles.logoImage}
@@ -58,15 +55,10 @@ function HomeScreenTitle({profile}) {
 
 // Profile button that navigates to the profile screen
 function ProfileButton({navigation, profile}) {
-  console.log('HomeScreenTitle render, avatar:' + profile.avatarImage);
-  console.log('firstName=' + profile.firstName);
-  console.log('lastName=' + profile.lastName);
-  console.log('navigation=' + JSON.stringify(navigation));
   let userInitials = '';
   if (profile.firstName || profile.lastName) {
     userInitials = `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase();
   }
-  console.log('userInitials=' + userInitials);
   return (
     <Pressable onPress={() => navigation.navigate('Profile')}>
 
@@ -91,14 +83,10 @@ function ProfileButton({navigation, profile}) {
 // right. The avatar image isn't handled as a button, and therefore
 // this is only used for the Profile screen
 function ScreenTitle({title, profile}) {
-  console.log('ScreenTitle render, avatar:' + profile.avatarImage);
-  console.log('firstName=' + profile.firstName);
-  console.log('lastName=' + profile.lastName);
   let userInitials = '';
   if (profile.firstName || profile.lastName) {
     userInitials = `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase();
   }
-  console.log('userInitials=' + userInitials);
   return (
     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
       <Text style={styles.screenTitle}>{title}</Text>
@@ -117,7 +105,6 @@ function ScreenTitle({title, profile}) {
 }
 
 export default function App() {
-  console.log('App started');
   const [profile, setProfile] = React.useState(getInitProfileRecord());
 
   const isInitialMount = React.useRef(true);
@@ -126,7 +113,6 @@ export default function App() {
   // A callback function given to screens to update the avatar image
   // in the profile
   const updateAvatarImage = (value) => {
-    console.log('updateAvatarImage value=' + String(value));
     setProfile((prevState) => ({
       ...prevState,
       avatarImage: value,
@@ -139,11 +125,9 @@ export default function App() {
   React.useEffect(() => {
     (async() => {
       try {
-        console.log('initial mount check');
         if (isInitialMount.current) {
           isInitialMount.current = false;
         } else {
-          console.log('Setting values');
           await setProfileRecord(profile);
         }
       } catch(error) {
@@ -155,7 +139,6 @@ export default function App() {
   React.useEffect(() => {
     (async () => {
       try {
-        console.log('Getting Values');
         const initialProfile = await getProfileRecord();
         setProfile(initialProfile);
         isLoading.current = false;

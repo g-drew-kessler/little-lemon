@@ -50,11 +50,9 @@ export async function getProfileRecord() {
                                                 'notifyPasswordChanges',
                                                 'notifySpecialOffers',
                                                 'notifyNewsletter']);
-    console.log('values: ' + JSON.stringify(values));
     profile = values.reduce((acc, curr) => {
       // Every item in the values array is itself an array with a string key
       // and a stringified value, i.e ['isOnboardingCompleted', 'firstName', 'email']
-      console.log('value for ' + String(curr[0]) + ' is ' + String(curr[1]));
       acc[curr[0]] = (curr[1] === '' ? '' : JSON.parse(curr[1]));
       return acc;
     }, {});
