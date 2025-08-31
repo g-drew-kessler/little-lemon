@@ -1,3 +1,7 @@
+// A Home screen with a welcome message for the Little Lemon restaurant,
+// and a scrollable menu list below a search bar and category selection
+// toggle buttons that allows users to filter the menu items displayed.
+
 import { useEffect, useState } from 'react';
 import {
     Text,
@@ -38,7 +42,6 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
     backgroundColor: '#495E57',
   },
   title: {

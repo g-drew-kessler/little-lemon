@@ -1,3 +1,12 @@
+// A MenuItems component that loads menu item info from a remote API
+// and displays them in a FlatList. Menu items include a title, description,
+// price, and image (show as a thumbnail to the right). Menu item info is
+// stored in a SQLite database for faster retrieval, until the user logs out.
+//
+// Provide a search bar for filtering menu items by parts of titles, and
+// a set of category toggle buttons for selecting categories that should be
+// included.
+
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import {
     Text,
@@ -20,21 +29,18 @@ import {
 import Filters from './Filters';
 import { useUpdateEffect } from '../utils';
 
-const menuItemsUrl = 'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json';
-const sections = ['Starters', 'Mains', 'Desserts', 'Drinks'];
-const imageUrlBase = 'https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/';
-const imageUrlOption = '?raw=true';
+const menuItemsUrl = 'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json';
 
-const Item = ({ name, description, price, image }) => (
+const Item = ({ title, description, price, imageUrl }) => (
     <View style={styles.item}>
         <View style={styles.itemText}>
-            <Text style={styles.itemName}>{name}</Text>
+            <Text style={styles.itemName}>{title}</Text>
             <Text style={styles.itemDescription}>{description}</Text>
             <Text style={styles.itemPrice}>${price}</Text>
         </View>
         <Image
             style={styles.itemImage}
-            source={{ uri: imageUrlBase + image + imageUrlOption }}
+            source={{ uri: imageUrl }}
         />
     </View>
 );
@@ -43,9 +49,8 @@ export default function MenuItems() {
     const [data, setData] = useState([]);
     const [searchBarText, setSearchBarText] = useState('');
     const [query, setQuery] = useState('');
-    const [filterSelections, setFilterSelections] = useState(
-        sections.map(() => false)
-    );
+    const [categories, setCategories] = useState([]);
+    const [filterCategories, setFilterCategories] = useState([]);
 
     const fetchMenuItems = async() => {
         let menuItems = [];
@@ -54,13 +59,15 @@ export default function MenuItems() {
             const response = await fetch(menuItemsUrl);
             const json = await response.json();
             menuItems = json.menu.map(
-                (item) => ({name: item.name,
-                            price: item.price,
+                (item) => ({id: item.id,
+                            title: item.title,
                             description: item.description,
-                            image: item.image,
+                            price: item.price,
+                            imageUrl: item.image,
                             category: item.category,
                 })
-            )
+            );
+            console.log('Fetched menu items:', menuItems);
         } catch (error) {
             Alert.alert('Failed to retrieve menu items from '
                         + menuItemsUrl + ': ' + error.message);
@@ -74,14 +81,19 @@ export default function MenuItems() {
                 await createTable();
                 let menuItems = await getMenuItems();
                 console.log('Got menu items from SQL query: ', menuItems);
-                
+
                 if (!menuItems.length) {
                     menuItems = await fetchMenuItems();
                     console.log('Fetched menu items:', menuItems);
                     await saveMenuItems(menuItems);
                 }
-            
+
+                const categories = menuItems.map(item => item.category);
+                const uniqueCategories = [... new Set(categories)].sort();
+                console.log('Fetched categories:', uniqueCategories);
+
                 setData(menuItems);
+                setCategories(uniqueCategories);
             } catch (error) {
                 Alert.alert('Failed to retrieve menu items: '
                             + error.message);
@@ -91,13 +103,13 @@ export default function MenuItems() {
 
     useUpdateEffect(() => {
         (async () => {
-            const activeCategories = sections.filter((s, i) => {
+            const activeCategories = categories.filter((s, i) => {
                 // If all filters are deselected, all categories are
                 // active
-                if (filterSelections.every((item) => item === false)) {
+                if (filterCategories.every((item) => item === false)) {
                     return true;
                 }
-                return filterSelections[i];
+                return filterCategories[i];
             });
             try {
                 // Perform a query filtered by active categories
@@ -111,7 +123,7 @@ export default function MenuItems() {
                 Alert.alert('Failed to select menu items: ' + error.message);
             }
         })();
-    }, [filterSelections, query]);
+    }, [categories, filterCategories, query]);
 
     // Use a debounce function to avoid performing a query unnecessarily
     const lookup = useCallback((q) => {
@@ -126,9 +138,9 @@ export default function MenuItems() {
     }
 
     const handleFilterChange = async (index) => {
-        const arrayCopy = [...filterSelections];
+        const arrayCopy = [...filterCategories];
         arrayCopy[index] = !arrayCopy[index];
-        setFilterSelections(arrayCopy);
+        setFilterCategories(arrayCopy);
     }
 
     return (
@@ -143,20 +155,20 @@ export default function MenuItems() {
             <View style={styles.menuItemsContainer}>
                 <Filters
                     style={styles.filters}
-                    selections={filterSelections}
-                    sections={sections}
+                    selections={filterCategories}
+                    sections={categories}
                     onChange={handleFilterChange}
                 />
                 <FlatList
                     data={data}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <Item name={item.name}
+                        <Item title={item.title}
                           description={item.description}
                           price={item.price}
-                          image={item.image}
-                    />
-                )}
+                          imageUrl={item.imageUrl}
+                        />
+                    )}
                 />
             </View>
         </View>

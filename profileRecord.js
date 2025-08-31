@@ -1,3 +1,6 @@
+// Routines that manage the user profile record as it is stored in
+// an AsyncStorage
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function getInitProfileRecord() {

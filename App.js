@@ -1,9 +1,15 @@
+// A Little Lemon restaurant on-line ordering app
+
 // Install for navigation:
 // npm install @react-navigation/native
 // npx Expo install react-native-screens react-native-safe-area-context
 // npm install @react-navigation/native-stack
+//
+// Other dependencies:
 // npm install @react-native-async-storage/async-storage
 // npx expo install expo-image-picker
+// npm install react-native-paper
+// npx expo install expo-sqlite
 
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -33,6 +39,7 @@ function HomeScreen() {
   );
 }
 
+// The navigation title for the home screen
 function HomeScreenTitle({profile}) {
   console.log('HomeScreenTitle render, avatar:' + profile.avatarImage);
   console.log('firstName=' + profile.firstName);
@@ -49,6 +56,7 @@ function HomeScreenTitle({profile}) {
 }
 
 
+// Profile button that navigates to the profile screen
 function ProfileButton({navigation, profile}) {
   console.log('HomeScreenTitle render, avatar:' + profile.avatarImage);
   console.log('firstName=' + profile.firstName);
@@ -78,6 +86,10 @@ function ProfileButton({navigation, profile}) {
   )
 }
 
+
+// The navigation screen title that includes an avatar image at the
+// right. The avatar image isn't handled as a button, and therefore
+// this is only used for the Profile screen
 function ScreenTitle({title, profile}) {
   console.log('ScreenTitle render, avatar:' + profile.avatarImage);
   console.log('firstName=' + profile.firstName);
@@ -111,19 +123,8 @@ export default function App() {
   const isInitialMount = React.useRef(true);
   const isLoading = React.useRef(true);
 
-  const updateBoolState = (key) => () =>
-    setProfile((prevState) => ({
-      ...prevState,
-      [key]: !prevState[key],
-    }));
-
-  const updateState = (key) => (value) =>
-    console.log('updateState value=' + String(value)) ||
-    setProfile((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-
+  // A callback function given to screens to update the avatar image
+  // in the profile
   const updateAvatarImage = (value) => {
     console.log('updateAvatarImage value=' + String(value));
     setProfile((prevState) => ({
@@ -132,6 +133,9 @@ export default function App() {
     }));
   };
 
+  // Set the profile record in the AsyncStorage whenever it changes,
+  // except for the first rendering, when the AsyncStorage provides
+  // the initial profile record values
   React.useEffect(() => {
     (async() => {
       try {
@@ -166,6 +170,7 @@ export default function App() {
     userInitials = `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase();
   }
 
+  // Show a splash screen while loading data.
   if (isLoading.current) {
     return <Splash />;
   }

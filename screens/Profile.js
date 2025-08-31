@@ -20,6 +20,8 @@ import {
   getProfileRecord
 } from '../profileRecord';
 
+import { deleteTable } from '../database';
+
 export default function ProfileScreen({navigation, updateAvatarImage}) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -226,9 +228,12 @@ export default function ProfileScreen({navigation, updateAvatarImage}) {
       </ScrollView>
       <View style={styles.footer}>
         <Pressable
-            onPress={() => {
+            onPress={async () => {
+                // On log out, forget the profile info and any menu
+                // item info that had been downloaded
                 setProfile(getInitProfileRecord());
-                NavigationActivation.navigate('Onboarding');
+                await deleteTable();
+                navigation.navigate('Onboarding');
             }}
             style={styles.logoutButton}>
             <Text style={styles.logoutButtonText}>Log Out</Text>

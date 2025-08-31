@@ -1,16 +1,15 @@
+// Routines to manage a SQLite database containing menu items, described
+// with a unique id, title, description, price, image URL, and category
+// (lower case)
 
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('little_lemon');
 
-
-// import * as SQLite from 'expo-sqlite';
-
-// const db = await SQLite.openDatabaseAsync('little_lemon');
-
-
 export async function createTable() {
-    return await db.execAsync('create table if not exists menuitems (name text primary key not null, description text, price text, image text, category text);');
+    return await db.execAsync('create table if not exists menuitems '
+        + '(id integer primary key not null, title text, description text,'
+        + ' price text, imageUrl text, category text);');
 }
 
 export async function getMenuItems() {
@@ -20,14 +19,14 @@ export async function getMenuItems() {
 export async function saveMenuItems(menuItems) {
     // Save all menu data in a table called menuitems.
     const valuesSqlArray = menuItems.reduce(
-      (valueStrArray, item) => ([...valueStrArray, ' (?, ?, ?, ?, ?)']),
+      (valueStrArray, item) => ([...valueStrArray, ' (?, ?, ?, ?, ?, ?)']),
       []);
     const initialArray = [];
     const valuesData = menuItems.reduce(
-      (data, item) => ([...data, item.name, item.description, item.price, item.image, item.category]),
+      (data, item) => ([...data, item.id, item.title, item.description, item.price, item.imageUrl, item.category]),
       initialArray,
     );
-    return await db.runAsync('insert into menuitems (name, description, price, image, category) values'
+    return await db.runAsync('insert into menuitems (id, title, description, price, imageUrl, category) values'
                   + valuesSqlArray.toString(), valuesData);
 }
 
@@ -41,9 +40,11 @@ export async function saveMenuItems(menuItems) {
  * since the latter does not contain any 'a' substring anywhere in the sequence of characters.
  *
  * The activeCategories parameter represents an array of selected 'categories' from the filter component
+ * Note that the activeCategories can be capitalized, but the categories
+ * stored in the database are lower case.
  * All results should belong to an active category to be retrieved.
- * For instance, if 'pizza' and 'pasta' belong to the 'Main Dishes' category and 'french fries' and 'salad' to the 'Sides' category,
- * a value of ['Main Dishes'] for active categories should return  only'pizza' and 'pasta'
+ * For instance, if 'pizza' and 'pasta' belong to the 'main' category and 'french fries' and 'salad' to the 'sides' category,
+ * a value of ['main'] for active categories should return  only'pizza' and 'pasta'
  *
  * Finally, the SQL statement must support filtering by both criteria at the same time.
  * That means if the query is 'a' and the active category 'Main Dishes', the SQL statement should return only 'pizza' and 'pasta'
@@ -57,7 +58,7 @@ export async function filterByQueryAndCategories(query, activeCategories) {
   if (query || (activeCategories.length > 0)) {
     queryStr += ' where';
     if (query) {
-      queryStr += " name like '%" + query + "%'";
+      queryStr += " title like '%" + query + "%'";
       if (activeCategories.length > 0) {
         queryStr += ' AND';
       }
@@ -75,4 +76,8 @@ export async function filterByQueryAndCategories(query, activeCategories) {
   }
   console.log('Filtering using query: ', query, ' queryStr: ', queryStr);
   return await db.getAllAsync(queryStr);
+}
+
+export async function deleteTable() {
+    return await db.execAsync('drop table if exists menuitems;');
 }
