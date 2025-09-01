@@ -195,7 +195,12 @@ export default function App() {
          >
           {(props) => <Profile {...props} updateAvatarImage={updateAvatarImage} />}
         </Stack.Screen>
-        <Stack.Screen name="Onboarding">
+        <Stack.Screen
+          name="Onboarding"
+          options={{
+            headerTitle: "Welcome!"
+          }}
+        >
           {(props) => <Onboarding {...props} updateProfile={(profile) => setProfile(profile)} />}
         </Stack.Screen>
       </Stack.Navigator>
