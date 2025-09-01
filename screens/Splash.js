@@ -1,3 +1,5 @@
+// A Splash screen to show while initializing the app
+
 import {
     View,
     Image,

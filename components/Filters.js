@@ -1,3 +1,6 @@
+// A Filters component providing category choices from which the
+// user can select using toggle buttons.
+
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const Filters = ({ onChange, selections, sections }) => {
@@ -5,6 +8,7 @@ const Filters = ({ onChange, selections, sections }) => {
     <View style={styles.filtersContainer}>
       {sections.map((section, index) => (
         <TouchableOpacity
+          key={section}
           onPress={() => {
             onChange(index);
           }}
@@ -21,7 +25,7 @@ const Filters = ({ onChange, selections, sections }) => {
           }}>
           <View>
             <Text style={{ color: selections[index] ? 'black' : 'white' }}>
-              {section}
+              {section.charAt(0).toUpperCase() + section.slice(1)}
             </Text>
           </View>
         </TouchableOpacity>

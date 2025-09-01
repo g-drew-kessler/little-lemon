@@ -1,3 +1,7 @@
+// An on-boarding screen that appears if the user hasn't used the app
+// yet, or logged out since last using the app. Gets the user's name and
+// email before proceeding to the main app.
+
 import { useState, useRef, useEffect } from 'react';
 import {
     ScrollView,
@@ -35,14 +39,16 @@ export default function Onboarding({navigation, updateProfile}) {
       [key]: value,
     }));
 
+  // Update the profile in our AsyncStorage whenever it changes, except on
+  // the first rendering, where the profile should be set from the current
+  // value in the AsyncStorage
+
   useEffect(() => {
     (async() => {
       try {
-        console.log('initial mount check onboarding');
         if (isInitialMount.current) {
           isInitialMount.current = false;
         } else {
-          console.log('Setting values onboarding');
           await setProfileRecord(profile);
         }
       } catch(error) {
@@ -54,7 +60,6 @@ export default function Onboarding({navigation, updateProfile}) {
   useEffect(() => {
     (async () => {
       try {
-        console.log('Getting Values onboarding');
         const initialProfile = await getProfileRecord();
         setProfile(initialProfile);
         setEmailValid(validateEmail(initialProfile.email) !== null);
@@ -104,7 +109,8 @@ export default function Onboarding({navigation, updateProfile}) {
       <View style={styles.footer}>
         <Pressable
             onPress={() => {
-              updateState('isOnboardingCompleted')(true);
+              toggleBoolState('isOnboardingCompleted')(true);
+              profile.isOnboardingCompleted = true;
               updateProfile(profile);
               navigation.navigate('Home');
             }}
