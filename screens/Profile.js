@@ -231,7 +231,10 @@ export default function ProfileScreen({navigation, updateAvatarImage}) {
                 // item info that had been downloaded
                 setProfile(getInitProfileRecord());
                 await deleteTable();
-                navigation.navigate('Onboarding');
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Onboarding' }],
+                });
             }}
             style={styles.logoutButton}>
             <Text style={styles.logoutButtonText}>Log Out</Text>
