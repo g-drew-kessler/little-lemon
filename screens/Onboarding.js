@@ -109,7 +109,8 @@ export default function Onboarding({navigation, updateProfile}) {
       <View style={styles.footer}>
         <Pressable
             onPress={() => {
-              updateState('isOnboardingCompleted')(true);
+              toggleBoolState('isOnboardingCompleted')(true);
+              profile.isOnboardingCompleted = true;
               updateProfile(profile);
               navigation.navigate('Home');
             }}

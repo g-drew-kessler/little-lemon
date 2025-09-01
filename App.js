@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   logoImage: {
     height: 50,
     width: 150,
-    margin: 20,
+    marginLeft: 20,
     resizeMode: 'contain',
     borderRadius: 40,
     accessible: true,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   avatarImage: {
     height: 50,
     width: 50,
-    margin: 20,
+    margin: 10,
     resizeMode: 'contain',
     borderRadius: 40,
     accessible: true,
