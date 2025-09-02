@@ -50,12 +50,15 @@ export async function getProfileRecord() {
                                                 'notifyPasswordChanges',
                                                 'notifySpecialOffers',
                                                 'notifyNewsletter']);
-    profile = values.reduce((acc, curr) => {
-      // Every item in the values array is itself an array with a string key
-      // and a stringified value, i.e ['isOnboardingCompleted', 'firstName', 'email']
-      acc[curr[0]] = (curr[1] === '' ? '' : JSON.parse(curr[1]));
-      return acc;
-    }, {});
+      loadedProfile = values.reduce((acc, curr) => {
+        // Every item in the values array is itself an array with a string key
+        // and a stringified value, i.e ['isOnboardingCompleted', 'firstName', 'email']
+        acc[curr[0]] = (curr[1] === '' ? '' : JSON.parse(curr[1]));
+        return acc;
+      }, {});
+    if (loadedProfile.isOnboardingCompleted) {
+      profile=loadedProfile;
+    }
   } catch(error) {
       console.log('Get profile error: ' + error);
   }

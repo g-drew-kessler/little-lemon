@@ -155,7 +155,9 @@ export default function ProfileScreen({navigation, updateAvatarImage}) {
             />
         </View>
         <View style={styles.entry}>
-            <Text style={styles.inputLabel}>Email{emailValid ? '' : ' (invalid)'}</Text>
+            <Text
+              style={emailValid ? styles.inputLabel : styles.invalidInputLabel}>
+              Email{emailValid ? '' : ' (invalid)'}</Text>
             <TextInput
                 style={styles.input}
                 value={email}
@@ -169,7 +171,10 @@ export default function ProfileScreen({navigation, updateAvatarImage}) {
             />
         </View>
         <View style={styles.entry}>
-            <Text style={styles.inputLabel}>Phone number{telephoneValid ? '' : ' (invalid)'}</Text>
+            <Text
+              style={telephoneValid ? styles.inputLabel : styles.invalidInputLabel}>
+              Phone number{telephoneValid ? '' : ' (invalid)'}
+            </Text>
             <TextInput
                 style={styles.input}
                 value={phoneNumber}
@@ -363,6 +368,13 @@ const styles = StyleSheet.create(
         margin: 30,
         marginVertical: 0,
         color: 'black',
+        textAlign: 'left',
+    },
+    invalidInputLabel: {
+        fontSize: 16,
+        margin: 30,
+        marginVertical: 0,
+        color: 'red',
         textAlign: 'left',
     },
     avatarImage: {

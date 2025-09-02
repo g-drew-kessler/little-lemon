@@ -137,6 +137,7 @@ export default function Onboarding({navigation, updateProfile}) {
             onPress={() => {
               toggleBoolState('isOnboardingCompleted')(true);
               profile.isOnboardingCompleted = true;
+              setProfileRecord(profile);
               updateProfile(profile);
               navigation.navigate('Home');
             }}
